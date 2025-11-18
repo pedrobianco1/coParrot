@@ -45,12 +45,13 @@ export async function gitAdd(repo, changes) {
   try {
     const selectedFiles = await selectFilesToAdd(changes);
 
+    await repo.restoreAll();
+
     if (selectedFiles.length === 0) {
       console.log(i18n.t('git.add.noFilesSelected'));
       return;
     }
 
-    await repo.restoreAll();
     await repo.add(selectedFiles);
   } catch (error) {
     console.error(i18n.t('output.prefixes.error'), error.message);
