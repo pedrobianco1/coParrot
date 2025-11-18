@@ -88,6 +88,39 @@
     },
     "selectModel": "Selecione um modelo (opcional):",
     "modelDefault": "Usar modelo padrão",
+    "selectCommitConvention": "Escolha sua convenção de mensagem de commit:",
+    "commitConventions": {
+      "conventional": "Conventional Commits",
+      "conventionalDesc": "feat:, fix:, docs: - Commits semânticos padrão",
+      "gitmoji": "Gitmoji",
+      "gitmojiDesc": "✨ 🐛 📝 - Commits com emojis",
+      "simple": "Simples",
+      "simpleDesc": "Mensagens curtas e descritivas sem prefixos",
+      "custom": "Personalizado",
+      "customDesc": "Defina seu próprio estilo de commit"
+    },
+    "selectCodeReviewStyle": "Quão detalhadas devem ser as revisões de código?",
+    "codeReviewStyles": {
+      "detailed": "Detalhado",
+      "detailedDesc": "Análise aprofundada com sugestões e exemplos",
+      "concise": "Conciso",
+      "conciseDesc": "Feedback breve e focado em questões principais",
+      "security": "Foco em segurança",
+      "securityDesc": "Ênfase em vulnerabilidades e melhores práticas de segurança"
+    },
+    "selectPRStyle": "Escolha o estilo de mensagem de pull request:",
+    "prStyles": {
+      "detailed": "Detalhado",
+      "detailedDesc": "Descrição abrangente com contexto e plano de testes",
+      "concise": "Conciso",
+      "conciseDesc": "Resumo breve das mudanças",
+      "technical": "Técnico",
+      "technicalDesc": "Detalhes técnicos para desenvolvedores experientes"
+    },
+    "wantsCustomInstructions": "Gostaria de adicionar instruções personalizadas?",
+    "customInstructionsHelp": "Exemplos: 'Sempre incluir emojis', 'Manter mensagens com menos de 50 caracteres', 'Focar em performance'",
+    "enterCustomInstructions": "Digite suas instruções personalizadas:",
+    "customInstructionsTooLong": "Instruções muito longas (máx. 500 caracteres)",
     "testConnection": "Testar conexão",
     "skipTest": "Pular e salvar",
     "testSetup": "Testar configuração",
@@ -97,6 +130,7 @@
     "retrySetup": "Gostaria de tentar novamente?",
     "setupComplete": "Configuração concluída com sucesso!",
     "setupFailed": "Configuração falhou. Por favor, tente novamente.",
+    "setupCancelled": "Configuração cancelada.",
     "configSaved": "Configuração salva em: {path}",
     "readyToGo": "Tudo pronto! Iniciando coParrot..."
   },
