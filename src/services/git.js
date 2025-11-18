@@ -159,6 +159,10 @@ class GitRepository {
     return this.exec(`git restore --staged ${fileList.map(f => `"${f}"`).join(' ')}`);
   }
 
+  restoreAll() {
+    return this.exec('git restore --staged .')
+  }
+
   /**
    * Create commit
    * @param {string} message - Commit message
@@ -460,6 +464,7 @@ class GitRepository {
         status: this._getChangeType(statusCode),
         statusCode,
         value: filename.trim(),
+        checked: statusCode.trim().includes('A') ? true : false,
         additions: stats[filename]?.additions || 0,
         deletions: stats[filename]?.deletions || 0
       };
