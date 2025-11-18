@@ -120,7 +120,33 @@ class StreamingOutput {
   showGitInfo(context) {
     this.stopThinking();
     context.map(change => {
-      console.log(`${change.status} ${change.value} ${change.additions > 0 ? '+ ' + change.additions : ''} ${change.deletions > 0 ? '- ' + change.deletions : ''}`)
+      // Translate status
+      const translatedStatus = i18n.t(`git.status.${change.status}`);
+
+      // Color based on status type
+      let statusColor = chalk.white;
+      if (change.status.includes('staged')) {
+        statusColor = chalk.green;
+      } else if (change.status === 'modified') {
+        statusColor = chalk.yellow;
+      } else if (change.status === 'deleted') {
+        statusColor = chalk.red;
+      } else if (change.status === 'untracked') {
+        statusColor = chalk.cyan;
+      } else if (change.status === 'conflict') {
+        statusColor = chalk.red.bold;
+      }
+
+      // Format status with color and padding
+      const formattedStatus = statusColor(translatedStatus.padEnd(25));
+
+      // Build stats string
+      const stats = [];
+      if (change.additions > 0) stats.push(chalk.green(`+${change.additions}`));
+      if (change.deletions > 0) stats.push(chalk.red(`-${change.deletions}`));
+      const statsStr = stats.length > 0 ? ' ' + stats.join(' ') : '';
+
+      console.log(`${formattedStatus} ${chalk.dim(change.value)}${statsStr}`);
     })
   }
 
