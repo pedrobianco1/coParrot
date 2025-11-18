@@ -1,7 +1,7 @@
 {
   "name": "coparrot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Your multilingual Git assistant - AI-powered CLI tool for Git operations",
   "main": "bin/index.js",
   "scripts": {
     "start": "node index.js",
@@ -11,10 +11,28 @@
   "bin": {
     "coparrot": "./index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "git",
+    "cli",
+    "assistant",
+    "i18n",
+    "internationalization",
+    "multilingual",
+    "terminal",
+    "ai"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",
+  "i18n": {
+    "defaultLanguage": "en",
+    "supportedLanguages": [
+      "en",
+      "pt-BR",
+      "es"
+    ],
+    "localesPath": "./locales"
+  },
   "dependencies": {
     "chalk": "^5.3.0",
     "cli-highlight": "^2.1.11",
