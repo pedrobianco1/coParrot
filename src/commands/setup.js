@@ -1,4 +1,4 @@
-import { select, password, confirm, input } from '@inquirer/prompts';
+import { select, password, confirm, input, editor } from '@inquirer/prompts';
 import chalk from 'chalk';
 import i18n from '../services/i18n.js';
 
@@ -43,13 +43,19 @@ export async function setup() {
     // Step 5: Commit Convention
     const commitConvention = await selectCommitConvention();
 
-    // Step 6: Code Review Preferences
+    // Step 6: Branch Naming Convention
+    const branchNaming = await selectBranchNaming();
+
+    // Step 7: Follow Project Patterns
+    const followProjectPatterns = await askFollowProjectPatterns();
+
+    // Step 8: Code Review Preferences
     const codeReviewStyle = await selectCodeReviewStyle();
 
-    // Step 7: PR Message Style
+    // Step 9: PR Message Style
     const prMessageStyle = await selectPRMessageStyle();
 
-    // Step 8: Custom Instructions/Observations
+    // Step 10: Custom Instructions/Observations
     const customInstructions = await promptCustomInstructions();
 
     console.log();
@@ -62,6 +68,8 @@ export async function setup() {
       apiKey,
       model,
       commitConvention,
+      branchNaming,
+      followProjectPatterns,
       codeReviewStyle,
       prMessageStyle,
       customInstructions
@@ -216,7 +224,153 @@ async function selectCommitConvention() {
     default: 'conventional'
   });
 
-  return convention;
+  // If custom, ask for the custom format
+  if (convention === 'custom') {
+    console.log();
+    console.log(chalk.dim('  ' + i18n.t('setup.customCommitHelp')));
+    console.log();
+
+    const customFormat = await editor({
+      message: i18n.t('setup.enterCustomCommit'),
+      default: i18n.t('setup.customCommitExample'),
+      waitForUseInput: false,
+      validate: (value) => {
+        if (!value || value.trim().length === 0) {
+          return i18n.t('setup.customCommitRequired') || 'Custom format cannot be empty';
+        }
+        return true;
+      }
+    });
+
+    // Return an object with both the type and the custom format
+    return {
+      type: 'custom',
+      format: customFormat.trim()
+    };
+  }
+
+  return {
+    type: convention,
+    format: null
+  };
+}
+
+/**
+ * Select branch naming convention
+ */
+async function selectBranchNaming() {
+  console.log();
+
+  const naming = await select({
+    message: i18n.t('setup.selectBranchNaming'),
+    choices: [
+      {
+        name: i18n.t('setup.branchNaming.gitflow'),
+        value: 'gitflow',
+        description: i18n.t('setup.branchNaming.gitflowDesc')
+      },
+      {
+        name: i18n.t('setup.branchNaming.descriptive'),
+        value: 'descriptive',
+        description: i18n.t('setup.branchNaming.descriptiveDesc')
+      },
+      {
+        name: i18n.t('setup.branchNaming.ticket'),
+        value: 'ticket-based',
+        description: i18n.t('setup.branchNaming.ticketDesc')
+      },
+      {
+        name: i18n.t('setup.branchNaming.custom'),
+        value: 'custom',
+        description: i18n.t('setup.branchNaming.customDesc')
+      }
+    ],
+    default: 'gitflow'
+  });
+
+  // If custom, ask for the custom format
+  if (naming === 'custom') {
+    console.log();
+    console.log(chalk.dim('  ' + i18n.t('setup.customBranchHelp')));
+    console.log();
+
+    const customFormat = await editor({
+      message: i18n.t('setup.enterCustomBranch'),
+      default: i18n.t('setup.customBranchExample'),
+      waitForUseInput: false,
+      validate: (value) => {
+        if (!value || value.trim().length === 0) {
+          return i18n.t('setup.customBranchRequired') || 'Custom format cannot be empty';
+        }
+        return true;
+      }
+    });
+
+    return {
+      type: 'custom',
+      format: customFormat.trim()
+    };
+  }
+
+  return {
+    type: naming,
+    format: null
+  };
+}
+
+/**
+ * Ask if user wants to follow project patterns
+ */
+async function askFollowProjectPatterns() {
+  console.log();
+
+  const followPatterns = await confirm({
+    message: i18n.t('setup.followProjectPatterns'),
+    default: true
+  });
+
+  if (!followPatterns) {
+    return {
+      enabled: false,
+      analyzeDepth: 0
+    };
+  }
+
+  console.log();
+
+  const analyzeDepth = await select({
+    message: i18n.t('setup.selectAnalyzeDepth'),
+    choices: [
+      {
+        name: i18n.t('setup.analyzeDepth.last10'),
+        value: 10,
+        description: i18n.t('setup.analyzeDepth.last10Desc')
+      },
+      {
+        name: i18n.t('setup.analyzeDepth.last25'),
+        value: 25,
+        description: i18n.t('setup.analyzeDepth.last25Desc')
+      },
+      {
+        name: i18n.t('setup.analyzeDepth.last50'),
+        value: 50,
+        description: i18n.t('setup.analyzeDepth.last50Desc')
+      },
+      {
+        name: i18n.t('setup.analyzeDepth.all'),
+        value: 0,
+        description: i18n.t('setup.analyzeDepth.allDesc')
+      }
+    ],
+    default: 25
+  });
+
+  return {
+    enabled: true,
+    analyzeDepth: analyzeDepth,
+    analyzeBranches: true,
+    analyzeCommits: true
+  };
 }
 
 /**
@@ -298,14 +452,16 @@ async function promptCustomInstructions() {
 
   console.log();
   console.log(chalk.dim('  ' + i18n.t('setup.customInstructionsHelp')));
+  console.log(chalk.dim('  ' + i18n.t('setup.customInstructionsEditor')));
   console.log();
 
-  const instructions = await input({
+  const instructions = await editor({
     message: i18n.t('setup.enterCustomInstructions'),
-    default: '',
+    default: i18n.t('setup.customInstructionsExample'),
+    waitForUseInput: false,
     validate: (value) => {
-      if (value && value.length > 500) {
-        return i18n.t('setup.customInstructionsTooLong') || 'Instructions too long (max 500 characters)';
+      if (value && value.length > 1000) {
+        return i18n.t('setup.customInstructionsTooLong') || 'Instructions too long (max 1000 characters)';
       }
       return true;
     }
