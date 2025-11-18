@@ -1,4 +1,4 @@
-import { select, password, confirm } from '@inquirer/prompts';
+import { select, password, confirm, input } from '@inquirer/prompts';
 import chalk from 'chalk';
 import i18n from '../services/i18n.js';
 
@@ -7,20 +7,29 @@ import i18n from '../services/i18n.js';
  * Guides users through initial configuration with a friendly UX
  */
 export async function setup() {
-  // Show welcome banner
+  // Show welcome banner (before language selection, use English)
   console.log();
   console.log(chalk.cyan.bold('═'.repeat(60)));
-  console.log(chalk.cyan.bold(`  ${i18n.t('setup.welcome')}`));
-  console.log(chalk.dim(`  ${i18n.t('setup.intro')}`));
+  console.log(chalk.cyan.bold('  Welcome to coParrot!'));
+  console.log(chalk.dim('  Let\'s get you set up. This will only take a minute.'));
   console.log(chalk.cyan.bold('═'.repeat(60)));
   console.log();
 
   try {
-    // Step 1: Language Selection
+    // Step 1: Language Selection (always in English initially)
     const language = await selectLanguage();
 
     // Reinitialize i18n with selected language
     i18n.setLanguage(language);
+
+    // Clear screen and show welcome in selected language
+    console.clear();
+    console.log();
+    console.log(chalk.cyan.bold('═'.repeat(60)));
+    console.log(chalk.cyan.bold(`  ${i18n.t('setup.welcome')}`));
+    console.log(chalk.dim(`  ${i18n.t('setup.intro')}`));
+    console.log(chalk.cyan.bold('═'.repeat(60)));
+    console.log();
 
     // Step 2: LLM Provider Selection
     const provider = await selectProvider();
@@ -28,8 +37,20 @@ export async function setup() {
     // Step 3: API Key Input
     const apiKey = await promptApiKey(provider);
 
-    // Step 4: Optional Model Selection (can be expanded later)
+    // Step 4: Model Selection
     const model = getDefaultModel(provider);
+
+    // Step 5: Commit Convention
+    const commitConvention = await selectCommitConvention();
+
+    // Step 6: Code Review Preferences
+    const codeReviewStyle = await selectCodeReviewStyle();
+
+    // Step 7: PR Message Style
+    const prMessageStyle = await selectPRMessageStyle();
+
+    // Step 8: Custom Instructions/Observations
+    const customInstructions = await promptCustomInstructions();
 
     console.log();
     console.log(chalk.green('✓ ') + chalk.white(i18n.t('setup.setupComplete')));
@@ -39,14 +60,18 @@ export async function setup() {
       language,
       provider,
       apiKey,
-      model
+      model,
+      commitConvention,
+      codeReviewStyle,
+      prMessageStyle,
+      customInstructions
     };
 
   } catch (error) {
     if (error.name === 'ExitPromptError') {
       // User cancelled setup
       console.log();
-      console.log(chalk.yellow('Setup cancelled.'));
+      console.log(chalk.yellow(i18n.t('setup.setupCancelled') || 'Setup cancelled.'));
       process.exit(0);
     }
     throw error;
@@ -54,26 +79,26 @@ export async function setup() {
 }
 
 /**
- * Language selection step
+ * Language selection step (always in English initially)
  */
 async function selectLanguage() {
   const language = await select({
-    message: i18n.t('setup.selectLanguage'),
+    message: 'Choose your preferred language:',
     choices: [
       {
-        name: '🇺🇸 English',
+        name: 'English',
         value: 'en',
-        description: 'English language'
+        description: 'Use English throughout the app'
       },
       {
-        name: '🇧🇷 Português (Brasil)',
+        name: 'Português (Brasil)',
         value: 'pt-BR',
-        description: 'Brazilian Portuguese'
+        description: 'Usar Português em todo o aplicativo'
       },
       {
-        name: '🇪🇸 Español',
+        name: 'Español',
         value: 'es',
-        description: 'Spanish language'
+        description: 'Usar Español en toda la aplicación'
       }
     ],
     default: 'en'
@@ -156,6 +181,137 @@ function getDefaultModel(provider) {
   };
 
   return defaultModels[provider] || 'default';
+}
+
+/**
+ * Select commit message convention
+ */
+async function selectCommitConvention() {
+  console.log();
+
+  const convention = await select({
+    message: i18n.t('setup.selectCommitConvention'),
+    choices: [
+      {
+        name: i18n.t('setup.commitConventions.conventional'),
+        value: 'conventional',
+        description: i18n.t('setup.commitConventions.conventionalDesc')
+      },
+      {
+        name: i18n.t('setup.commitConventions.gitmoji'),
+        value: 'gitmoji',
+        description: i18n.t('setup.commitConventions.gitmojiDesc')
+      },
+      {
+        name: i18n.t('setup.commitConventions.simple'),
+        value: 'simple',
+        description: i18n.t('setup.commitConventions.simpleDesc')
+      },
+      {
+        name: i18n.t('setup.commitConventions.custom'),
+        value: 'custom',
+        description: i18n.t('setup.commitConventions.customDesc')
+      }
+    ],
+    default: 'conventional'
+  });
+
+  return convention;
+}
+
+/**
+ * Select code review style
+ */
+async function selectCodeReviewStyle() {
+  console.log();
+
+  const style = await select({
+    message: i18n.t('setup.selectCodeReviewStyle'),
+    choices: [
+      {
+        name: i18n.t('setup.codeReviewStyles.detailed'),
+        value: 'detailed',
+        description: i18n.t('setup.codeReviewStyles.detailedDesc')
+      },
+      {
+        name: i18n.t('setup.codeReviewStyles.concise'),
+        value: 'concise',
+        description: i18n.t('setup.codeReviewStyles.conciseDesc')
+      },
+      {
+        name: i18n.t('setup.codeReviewStyles.security'),
+        value: 'security-focused',
+        description: i18n.t('setup.codeReviewStyles.securityDesc')
+      }
+    ],
+    default: 'detailed'
+  });
+
+  return style;
+}
+
+/**
+ * Select PR message style
+ */
+async function selectPRMessageStyle() {
+  console.log();
+
+  const style = await select({
+    message: i18n.t('setup.selectPRStyle'),
+    choices: [
+      {
+        name: i18n.t('setup.prStyles.detailed'),
+        value: 'detailed',
+        description: i18n.t('setup.prStyles.detailedDesc')
+      },
+      {
+        name: i18n.t('setup.prStyles.concise'),
+        value: 'concise',
+        description: i18n.t('setup.prStyles.conciseDesc')
+      },
+      {
+        name: i18n.t('setup.prStyles.technical'),
+        value: 'technical',
+        description: i18n.t('setup.prStyles.technicalDesc')
+      }
+    ],
+    default: 'detailed'
+  });
+
+  return style;
+}
+
+/**
+ * Prompt for custom instructions/observations
+ */
+async function promptCustomInstructions() {
+  console.log();
+
+  const wantsCustom = await confirm({
+    message: i18n.t('setup.wantsCustomInstructions'),
+    default: false
+  });
+
+  if (!wantsCustom) {
+    return '';
+  }
+
+  console.log();
+  console.log(chalk.dim('  ' + i18n.t('setup.customInstructionsHelp')));
+  console.log();
+
+  const instructions = await input({
+    message: i18n.t('setup.enterCustomInstructions'),
+    default: '',
+    validate: (value) => {
+      if (value && value.length > 500) {
+        return i18n.t('setup.customInstructionsTooLong') || 'Instructions too long (max 500 characters)';
+      }
+      return true;
+    }
+  });
+
+  return instructions.trim();
 }
 
 /**
