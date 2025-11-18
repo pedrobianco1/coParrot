@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import path from 'path';
+import i18n from './i18n.js';
 
 /**
  * Git Repository Manager
@@ -18,7 +19,7 @@ class GitRepository {
     try {
       this.exec('git rev-parse --git-dir');
     } catch (error) {
-      throw new Error(`Not a git repository: ${this.repoPath}`);
+      throw new Error(i18n.t('git.errors.notARepository', { path: this.repoPath }));
     }
   }
 
@@ -37,7 +38,7 @@ class GitRepository {
     } catch (error) {
       // Extract just the error message without stack trace
       const message = error.stderr?.trim() || error.message;
-      throw new Error(`Git command failed: ${message}`);
+      throw new Error(i18n.t('git.errors.commandFailed', { message }));
     }
   }
 
