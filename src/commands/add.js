@@ -1,11 +1,6 @@
 import { checkbox } from '@inquirer/prompts';
 import MarkdownRenderer from '../lib/renderer.js';
-
-const MESSAGES = {
-  SELECT_FILES: 'Choose files to stage for commit (Space to select, Enter to confirm)',
-  NO_FILES_SELECTED: 'No files were staged. Your working directory remains unchanged.',
-  NO_FILES_AVAILABLE: 'No files available to stage',
-};
+import i18n from '../services/i18n.js';
 
 /**
  * Prompts the user to select files to add to git staging area
@@ -15,12 +10,12 @@ const MESSAGES = {
  */
 export async function selectFilesToAdd(files) {
   if (!files || !Array.isArray(files) || files.length === 0) {
-    throw new Error(MESSAGES.NO_FILES_AVAILABLE);
+    throw new Error(i18n.t('git.add.noFilesAvailable'));
   }
-  
+
   try {
     const response = await checkbox({
-      message: MESSAGES.SELECT_FILES,
+      message: i18n.t('git.add.selectFiles'),
       choices: files,
       loop: false,
     });
@@ -51,14 +46,14 @@ export async function gitAdd(repo, changes) {
     const selectedFiles = await selectFilesToAdd(changes);
 
     if (selectedFiles.length === 0) {
-      console.log(MESSAGES.NO_FILES_SELECTED);
+      console.log(i18n.t('git.add.noFilesSelected'));
       return;
     }
 
     await repo.restoreAll();
     await repo.add(selectedFiles);
   } catch (error) {
-    console.error('Error adding files:', error.message);
+    console.error(i18n.t('output.prefixes.error'), error.message);
     throw error;
   }
 }
@@ -74,14 +69,14 @@ function showAddedFiles(files) {
   });
 
   const fileCount = files.length;
-  const plural = fileCount === 1 ? 'file' : 'files';
+  const filesWord = i18n.plural('git.add.files', fileCount);
 
   const markdown = `
-## Successfully staged ${fileCount} ${plural}
+## ${i18n.t('git.add.successStaged', { count: fileCount, files: filesWord })}
 
 ${files.map(file => `✓ ${file}`).join('\n')}
 
-**Next step:** Run \`/commit\` to create your commit, or continue staging more files.
+${i18n.t('git.add.nextStep')}
 `;
 
   const output = renderer.render(markdown);
