@@ -2,6 +2,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import MarkdownRenderer from './renderer.js';
 import StreamingOutput from './streamer.js';
+import i18n from '../services/i18n.js';
 
 /**
  * Main CLI Interface
@@ -64,7 +65,7 @@ class CLI {
 
       } catch (error) {
         if (error.isTtyError) {
-          this.streamer.showError('Prompt couldn\'t be rendered in the current environment');
+          this.streamer.showError(i18n.t('cli.messages.renderError'));
           break;
         } else {
           this.streamer.showError(error);
@@ -143,8 +144,8 @@ class CLI {
         if (this.options.onCommand) {
           await this.options.onCommand(cmd, args, this);
         } else {
-          this.streamer.showError(`Unknown command: /${cmd}`);
-          this.streamer.showInfo('Type /help for available commands');
+          this.streamer.showError(i18n.t('cli.messages.unknownCommand', { cmd }));
+          this.streamer.showInfo(i18n.t('cli.messages.helpHint'));
         }
     }
   }
@@ -154,16 +155,16 @@ class CLI {
    */
   showHelp() {
     console.log();
-    console.log(chalk.white.bold('Available Commands:'));
+    console.log(chalk.white.bold(i18n.t('cli.messages.availableCommands') + ':'));
     console.log();
-    console.log(chalk.cyan('  /help') + chalk.dim('     - Show this help message'));
-    console.log(chalk.cyan('  /clear') + chalk.dim('    - Clear the screen'));
-    console.log(chalk.cyan('  /history') + chalk.dim('  - Show conversation history'));
-    console.log(chalk.cyan('  /exit') + chalk.dim('     - Exit the application'));
+    console.log(chalk.cyan(`  /${i18n.t('cli.commands.help')}`) + chalk.dim(`     - ${i18n.t('cli.commandDescriptions.help')}`));
+    console.log(chalk.cyan(`  /${i18n.t('cli.commands.clear')}`) + chalk.dim(`    - ${i18n.t('cli.commandDescriptions.clear')}`));
+    console.log(chalk.cyan(`  /${i18n.t('cli.commands.history')}`) + chalk.dim(`  - ${i18n.t('cli.commandDescriptions.history')}`));
+    console.log(chalk.cyan(`  /${i18n.t('cli.commands.exit')}`) + chalk.dim(`     - ${i18n.t('cli.commandDescriptions.exit')}`));
 
     if (this.options.customCommands) {
       console.log();
-      console.log(chalk.white.bold('Custom Commands:'));
+      console.log(chalk.white.bold(i18n.t('cli.messages.customCommands') + ':'));
       console.log();
       for (const [cmd, description] of Object.entries(this.options.customCommands)) {
         console.log(chalk.cyan(`  /${cmd}`) + chalk.dim(`     - ${description}`));
@@ -178,18 +179,18 @@ class CLI {
    */
   showHistory() {
     console.log();
-    console.log(chalk.white.bold('Conversation History:'));
+    console.log(chalk.white.bold(i18n.t('cli.history.title') + ':'));
     console.log();
 
     if (this.conversationHistory.length === 0) {
-      console.log(chalk.dim('  No messages yet'));
+      console.log(chalk.dim('  ' + i18n.t('cli.history.empty')));
       console.log();
       return;
     }
 
     this.conversationHistory.forEach((entry, index) => {
       const roleColor = entry.role === 'user' ? chalk.cyan : chalk.green;
-      const roleLabel = entry.role === 'user' ? 'You' : 'Assistant';
+      const roleLabel = entry.role === 'user' ? i18n.t('cli.history.you') : i18n.t('cli.history.assistant');
 
       console.log(roleColor.bold(`  ${roleLabel}:`));
       console.log(chalk.dim(`  ${entry.content.substring(0, 100)}${entry.content.length > 100 ? '...' : ''}`));
@@ -203,7 +204,7 @@ class CLI {
   async shutdown() {
     this.streamer.stopThinking();
     console.log();
-    this.streamer.showInfo('Goodbye! 👋');
+    this.streamer.showInfo(i18n.t('app.goodbye') + ' 👋');
     console.log();
     this.isRunning = false;
     process.exit(0);
