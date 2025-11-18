@@ -6,6 +6,7 @@ import { program } from 'commander';
 import chalk from 'chalk';
 import { loadConfig, setupConfig } from '../src/services/config.js'
 import { gitAdd } from '../src/commands/add.js'
+import i18n from '../src/services/i18n.js';
 
 // Configure commander
 program
@@ -56,6 +57,11 @@ async function handleCommand(cmd, args, cli) {
 async function main() {
   const config = loadConfig();
 
+  // Initialize i18n with the configured language
+  // loadConfig already initializes i18n, but this ensures it's always called
+  const language = config.language || 'en';
+  i18n.initialize(language);
+
   const cli = new CLI({
     appName: 'CoParrot',
     version: '1.0.0',
@@ -68,7 +74,7 @@ async function main() {
     config: config
   });
 
-  if (Object.keys(config).length === 0) {
+  if (!config.provider) {
     const isSetupFinished = await setupConfig();
 
     if (isSetupFinished) cli.start();
