@@ -5,7 +5,7 @@ import gitRepository from '../src/services/git.js'
 import { program } from 'commander';
 import chalk from 'chalk';
 import { loadConfig, setupConfig } from '../src/services/config.js'
-import { selectFilesToAdd } from '../src/commands/add.js'
+import { gitAdd } from '../src/commands/add.js'
 
 // Configure commander
 program
@@ -22,6 +22,7 @@ const options = program.opts();
  */
 async function handleCommand(cmd, args, cli) {
   const repo = new gitRepository();
+  const status = repo.getDetailedStatus();
 
   switch (cmd) {
     case 'test':
@@ -38,14 +39,10 @@ async function handleCommand(cmd, args, cli) {
       );
       break;
     case 'status':
-      const status = repo.getDetailedStatus();
       cli.streamer.showGitInfo(status)
       break;
     case 'add':
-      console.log(repo.getDetailedStatus());
-
-      const files = selectFilesToAdd(repo.getDetailedStatus())
-      // const add = repo.add(files);
+      gitAdd(repo, status) 
       break;
     default:
       cli.streamer.showError(`Unknown command: /${cmd}`);
