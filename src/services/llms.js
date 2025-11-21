@@ -12,6 +12,7 @@ class LLMOrchestrator {
       apiKey: options.apiKey,
       model: options.model,
       instructions: options.instructions || {},
+      skipApproval: options.skipApproval || false,
       ...options
     };
 
@@ -50,15 +51,7 @@ class LLMOrchestrator {
   }
 
   async approveLLMResponse(response) {
-    // Create visual separator
-    const separator = chalk.gray('═'.repeat(process.stdout.columns || 80));
-
-    // Display the response with enhanced formatting
-    console.log('\n' + separator);
-    console.log(chalk.cyan.bold('  AI Generated Message:'));
-    console.log(separator);
-    console.log(chalk.white.bold('\n' + response + '\n'));
-    console.log(separator + '\n');
+    this._showLLMResponse(response);
 
     // Present options to the user
     const action = await select({
@@ -95,8 +88,9 @@ class LLMOrchestrator {
         // Stop loading indicator
         this.streamer.stopThinking();
 
-        // Get user approval
-        const result = await this.approveLLMResponse(response);
+        // If the user passed the -y flag it uses the response
+        // or get user approval
+        const result = this.options.skipApproval ? { action: 'approve'} : await this.approveLLMResponse(response);
 
         if (result.action === 'approve') {
           approved = true;
@@ -189,6 +183,18 @@ ${this.options.instructions.branchNaming?.type || 'gitflow'} convention.\n${base
       default:
         return `You are a helpful git assistant.\n${baseInstructions}${additionalInstructions}`;
     }
+  }
+
+  _showLLMResponse(response) {
+    // Create visual separator
+    const separator = chalk.gray('═'.repeat(process.stdout.columns || 80));
+
+    // Display the response with enhanced formatting
+    console.log('\n' + separator);
+    console.log(chalk.cyan.bold('  AI Generated Message:'));
+    console.log(separator);
+    console.log(chalk.white.bold('\n' + response + '\n'));
+    console.log(separator + '\n');
   }
 }
 
