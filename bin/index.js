@@ -37,7 +37,8 @@ async function handleCommand(cmd, args, cli) {
       'review': config.codeReviewStyle,
       'pr': config.prMessageStyle,
       'custom': config.customInstructions
-    }
+    },
+    skipApproval: args.includes('-y') || args.includes('--yes')
   });
 
   switch (cmd) {
