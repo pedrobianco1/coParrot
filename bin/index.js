@@ -61,11 +61,14 @@ async function handleCommand(cmd, args, cli) {
       gitAdd(repo, status) 
       break;
     case 'commit':
-      // TODO: noticed that when I run the first time setup and try to run this it apparently is not being able to get the provider (toLowerCase() error)
       const context = repo.diff([], {staged: true});
-      // provider.generateCommitMessage(context);
-      provider.generateCommitMessage(context, 'commit');
-      // gitCommit(repo, status, provider)
+      const commitMessage = await provider.generateCommitMessage(context);
+      if (commitMessage) {
+        cli.streamer.showSuccess('Commit message approved!');
+        // TODO: Use the approved commit message for the actual commit
+        // gitCommit(repo, status, commitMessage)
+      }
+      break;
     default:
       cli.streamer.showError(`Unknown command: /${cmd}`);
       cli.streamer.showInfo('Available custom commands: /test, /demo');
