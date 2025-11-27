@@ -113,6 +113,9 @@ async function main() {
     config: config
   });
 
+  // Provide git repository class to CLI for TAB completion
+  cli.setGitRepository(gitRepository);
+
   if (!config.provider) {
     const isSetupFinished = await setupConfig();
 
