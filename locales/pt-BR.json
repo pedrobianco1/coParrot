@@ -56,6 +56,17 @@
       "noFilesStaged": "Nenhum arquivo preparado para commit!",
       "useAddFirst": "Use /add para preparar arquivos primeiro, ou tente /squawk para fazer commit dos arquivos individualmente."
     },
+    "squawk": {
+      "title": "Fazendo commit dos arquivos individualmente...",
+      "processing": "Processando {current} de {total} arquivos",
+      "stagingFile": "Preparando arquivo:",
+      "generatingMessage": "Gerando mensagem de commit...",
+      "committingFile": "Fazendo commit do arquivo:",
+      "fileComplete": "Arquivo committed com sucesso!",
+      "allComplete": "Todos os arquivos committed com sucesso!",
+      "noChanges": "Nenhum arquivo com alterações para commit.",
+      "summary": "{count} {files} committed"
+    },
     "errors": {
       "notARepository": "Não é um repositório git: {path}",
       "commandFailed": "Comando git falhou: {message}"

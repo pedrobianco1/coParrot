@@ -57,6 +57,17 @@
       "useAddFirst": "Use /add to stage files first, or try /squawk to commit files individually.",
       "successCommited": ""
     },
+    "squawk": {
+      "title": "Committing files individually...",
+      "processing": "Processing {current} of {total} files",
+      "stagingFile": "Staging file:",
+      "generatingMessage": "Generating commit message...",
+      "committingFile": "Committing file:",
+      "fileComplete": "File committed successfully!",
+      "allComplete": "All files committed successfully!",
+      "noChanges": "No files with changes to commit.",
+      "summary": "Committed {count} {files}"
+    },
     "errors": {
       "notARepository": "Not a git repository: {path}",
       "commandFailed": "Git command failed: {message}"
