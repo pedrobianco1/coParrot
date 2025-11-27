@@ -5,7 +5,7 @@
     "tagline": "Your Git Assistant",
     "welcome": {
       "firstTime": "First time? Run setup to get started!",
-      "typeMessage": "Type your message or use /help for commands"
+      "typeMessage": "Type a command or 'help' to see available commands"
     },
     "goodbye": "Goodbye!"
   },
@@ -29,8 +29,8 @@
     "messages": {
       "availableCommands": "Available Commands",
       "customCommands": "Custom Commands",
-      "unknownCommand": "Unknown command: /{cmd}",
-      "helpHint": "Type /help for available commands",
+      "unknownCommand": "Unknown command: {cmd}",
+      "helpHint": "Type 'help' for available commands",
       "renderError": "Prompt couldn't be rendered in the current environment"
     },
     "history": {
