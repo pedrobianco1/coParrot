@@ -181,19 +181,19 @@ class StreamingOutput {
     this.clear();
     console.log();
 
-    // Display animated parrot header
-    await displayAnimatedHeader(appName, version, i18n.t('app.tagline'));
+    // Display animated parrot header (just the CoParrot text)
+    await displayAnimatedHeader(appName);
+
+    // Display repository stats status bar
+    const stats = getRepoStats();
+    if (stats) {
+      displayRepoStats(stats, version);
+    }
 
     // Show helpful info for first-time users
     if (!config.provider) {
       console.log(chalk.yellow('  ⚡ ' + i18n.t('app.welcome.firstTime')));
       console.log();
-    }
-
-    // Display repository stats and funny message
-    const stats = getRepoStats();
-    if (stats) {
-      displayRepoStats(stats);
     }
 
     console.log(chalk.dim('  ' + i18n.t('app.welcome.typeMessage')));
