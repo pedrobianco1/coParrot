@@ -84,6 +84,9 @@ async function handleCommand(cmd, args, cli) {
       const ignoredFiles = parseFlag(args, '--ignore');
       await squawk(repo, provider, { ignore: ignoredFiles });
       break;
+    case 'checkout':
+      const test = await repo.getBranches({ count: 10 });
+      console.log(test)
     default:
       cli.streamer.showError(`Unknown command: ${cmd}`);
       cli.streamer.showInfo('Type "help" to see available commands');
