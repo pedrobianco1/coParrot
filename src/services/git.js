@@ -238,12 +238,13 @@ class GitRepository {
    * @returns {Array<string>} Branch names
    */
   getBranches(options = {}) {
-    const { remote = false, all = false } = options;
+    const { remote = false, all = false, count = 0 } = options;
 
     let cmd = 'git branch';
     if (all) cmd += ' -a';
     else if (remote) cmd += ' -r';
-
+    else if (count) cmd += ` | head -n ${count}`
+            
     const output = this.exec(cmd);
     return output
       .split('\n')
