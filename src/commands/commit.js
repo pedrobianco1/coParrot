@@ -35,7 +35,7 @@ async function showCommitedMessage(repo) {
 
   const markdown = `## ${lastCommit}
 
-Files **committed** successfully!`;
+Changes **committed** successfully!`;
 
   const output = renderer.render(markdown);
   process.stdout.write(output);
