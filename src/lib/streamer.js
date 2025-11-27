@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import { createHeader } from '../utils/header.js';
+import { createHeader, displayAnimatedHeader } from '../utils/header.js';
+import { getRepoStats, displayRepoStats } from '../utils/repo-stats.js';
 import i18n from '../services/i18n.js';
 
 /**
@@ -176,22 +177,23 @@ class StreamingOutput {
   /**
    * Display welcome banner with gradient header
    */
-  showWelcome(appName = 'CoParrot', version = '1.0.0', config = {}) {
+  async showWelcome(appName = 'CoParrot', version = '1.0.0', config = {}) {
     this.clear();
     console.log();
 
-    // Display gradient header
-    const header = createHeader(appName);
-    console.log(header);
-
-    // Display version and tagline
-    console.log(chalk.dim(`  ${i18n.t('app.version', { version })}`) + chalk.cyan('  •  ') + chalk.dim(i18n.t('app.tagline')));
-    console.log();
+    // Display animated parrot header
+    await displayAnimatedHeader(appName, version, i18n.t('app.tagline'));
 
     // Show helpful info for first-time users
     if (!config.provider) {
       console.log(chalk.yellow('  ⚡ ' + i18n.t('app.welcome.firstTime')));
       console.log();
+    }
+
+    // Display repository stats and funny message
+    const stats = getRepoStats();
+    if (stats) {
+      displayRepoStats(stats);
     }
 
     console.log(chalk.dim('  ' + i18n.t('app.welcome.typeMessage')));

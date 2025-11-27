@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import MarkdownRenderer from './renderer.js';
 import StreamingOutput from './streamer.js';
 import i18n from '../services/i18n.js';
+import { startContinuousParrotAnimation } from '../utils/header.js';
 
 /**
  * Main CLI Interface
@@ -27,13 +28,18 @@ class CLI {
     this.streamer = new StreamingOutput(this.renderer);
     this.conversationHistory = [];
     this.isRunning = false;
+    this.parrotAnimation = null; // Animation controller
   }
 
   /**
    * Start the CLI interface
    */
   async start() {
-    this.streamer.showWelcome(this.options.appName, this.options.version, this.config);
+    await this.streamer.showWelcome(this.options.appName, this.options.version, this.config);
+
+    // Start continuous parrot animation in background
+    this.parrotAnimation = startContinuousParrotAnimation();
+
     this.isRunning = true;
 
     // Handle graceful shutdown
@@ -237,7 +243,7 @@ class CLI {
 
       case 'clear':
         this.streamer.clear();
-        this.streamer.showWelcome(this.options.appName, this.options.version);
+        await this.streamer.showWelcome(this.options.appName, this.options.version, this.config);
         break;
 
       case 'history':
@@ -313,6 +319,11 @@ class CLI {
    * Shutdown the CLI gracefully
    */
   async shutdown() {
+    // Stop parrot animation
+    if (this.parrotAnimation) {
+      this.parrotAnimation.stop();
+    }
+
     this.streamer.stopThinking();
     console.log();
     this.streamer.showInfo(i18n.t('app.goodbye') + ' 👋');
