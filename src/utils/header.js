@@ -182,11 +182,9 @@ function combineTextSideBySide(left, right, padding = 4) {
 /**
  * Display header text only (parrot will be animated separately)
  * @param {string} appName - Application name
- * @param {string} version - Version string
- * @param {string} tagline - Optional tagline
  * @returns {Promise<void>}
  */
-export async function displayAnimatedHeader(appName = 'CoParrot', version = '1.0.0', tagline = null) {
+export async function displayAnimatedHeader(appName = 'CoParrot') {
   // Use a solid/filled font for better gradient visibility
   const asciiArt = figlet.textSync(appName, {
     font: 'ANSI Shadow', // Filled font with background
@@ -202,17 +200,6 @@ export async function displayAnimatedHeader(appName = 'CoParrot', version = '1.0
   const paddedHeader = gradientHeader.split('\n').map(line => '                          ' + line).join('\n');
 
   console.log('\n' + paddedHeader);
-
-  // Version and tagline in plain white (no gradient)
-  if (version) {
-    console.log('                          ' + chalk.white(`  v${version}`));
-  }
-
-  if (tagline) {
-    console.log('                          ' + chalk.dim(`  ${tagline}`));
-  }
-
-  console.log();
 }
 
 /**
