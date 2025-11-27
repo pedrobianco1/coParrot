@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import { loadConfig, setupConfig } from '../src/services/config.js'
 import { gitAdd } from '../src/commands/add.js'
 import { gitCommit } from '../src/commands/commit.js'
+import { squawk } from '../src/commands/squawk.js'
 import i18n from '../src/services/i18n.js';
 
 // Configure commander
@@ -72,11 +73,14 @@ async function handleCommand(cmd, args, cli) {
       }
 
       const commitMessage = await provider.generateCommitMessage(context);
-      // const commitMessage = "test"
+      //const commitMessage = "test"
 
       if (commitMessage) {
         gitCommit(repo, commitMessage)
       }
+      break;
+    case 'squawk':
+      squawk(repo, provider);
       break;
     default:
       cli.streamer.showError(`Unknown command: /${cmd}`);
