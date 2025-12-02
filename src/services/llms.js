@@ -74,45 +74,57 @@ class LLMOrchestrator {
     return { action };
   }
 
-  async generateCommitMessage(context, customInstructions = null) {
+  async generateWithApproval(type, context, options = {}) {
+    const {
+      loadingMessage = 'Generating...',
+      customInstructions = null
+    } = options;
+
     let approved = false;
     let response = null;
+    let currentInstructions = customInstructions;
 
     while (!approved) {
       try {
-        // Show loading indicator
-        this.streamer.startThinking('Generating commit message...');
-
-        // Call the LLM
-        response = await this.call(context, "commit", customInstructions);
-
-        // Stop loading indicator
+        this.streamer.startThinking(loadingMessage);
+        response = await this.call(context, type, currentInstructions);
         this.streamer.stopThinking();
 
-        // If the user passed the -y flag it uses the response
-        // or get user approval
-        const result = this.options.skipApproval ? { action: 'approve'} : await this.approveLLMResponse(response);
+        const result = this.options.skipApproval
+          ? { action: 'approve' }
+          : await this.approveLLMResponse(response);
 
         if (result.action === 'approve') {
           approved = true;
           return response;
         } else if (result.action === 'retry') {
-          // Retry without custom instructions
-          customInstructions = null;
-          continue;
+          currentInstructions = null;
         } else if (result.action === 'retry_with_instructions') {
-          // Retry with custom instructions
-          customInstructions = result.customInstructions;
-          continue;
+          currentInstructions = result.customInstructions;
         }
       } catch (error) {
         this.streamer.stopThinking();
-        this.streamer.showError(`Error generating commit message: ${error.message}`);
+        this.streamer.showError(`Error generating ${type}: ${error.message}`);
         throw error;
       }
     }
 
     return response;
+  }
+
+  // Then usage becomes simple:
+  async generateCommitMessage(context, customInstructions = null) {
+    return this.generateWithApproval('commit', context, {
+      loadingMessage: 'Generating commit message...',
+      customInstructions
+    });
+  }
+
+  async generateBranchName(context, customInstructions = null) {
+    return this.generateWithApproval('branch', context, {
+      loadingMessage: 'Generating branch name...',
+      customInstructions
+    });
   }
 
   async _callOpenAI(context, type, customInstructions = null) {
