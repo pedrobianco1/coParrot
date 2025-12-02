@@ -7,7 +7,10 @@
       "firstTime": "Primeira vez? Execute o setup para começar!",
       "typeMessage": "Digite sua mensagem ou use /help para comandos"
     },
-    "goodbye": "Até logo!"
+    "goodbye": "Até logo!",
+    "feedback": {
+      "text": "Contribuições ou relatórios de bugs"
+    }
   },
   "cli": {
     "prompt": "> ",
@@ -65,7 +68,15 @@
       "fileComplete": "Arquivo committed com sucesso!",
       "allComplete": "Todos os arquivos committed com sucesso!",
       "noChanges": "Nenhum arquivo com alterações para commit.",
-      "summary": "{count} {files} committed"
+      "allFilesIgnored": "Todos os arquivos foram ignorados. Nada para commit.",
+      "ignoringFiles": "Ignorando {count} arquivo(s) correspondente(s): {patterns}",
+      "groupingFiles": "Agrupando {count} arquivo(s) em {groups} grupo(s): {patterns}",
+      "summary": "{count} {files} committed",
+      "summaryComplete": "{count} commits criados ({files} arquivos)",
+      "groupCommits": "{count} commits em grupo ({files} arquivos)",
+      "individualCommits": "{count} commits individuais",
+      "failedCommits": "{count} falharam",
+      "completedIn": "Concluído em {time}s"
     },
     "errors": {
       "notARepository": "Não é um repositório git: {path}",
@@ -93,6 +104,7 @@
   "setup": {
     "welcome": "Bem-vindo ao coParrot!",
     "intro": "Vamos configurá-lo. Isso levará apenas um minuto.",
+    "reconfigureMessage": "Vamos reconfigurar suas configurações do coParrot. Suas configurações atuais serão atualizadas.",
     "selectLanguage": "Escolha seu idioma preferido:",
     "selectProvider": "Selecione um provedor de LLM:",
     "providers": {
@@ -210,6 +222,16 @@
       "warning": "⚠"
     },
     "running": "Executando {toolName}..."
+  },
+  "llm": {
+    "approvalTitle": "Mensagem Gerada pela IA:",
+    "approvalOptions": {
+      "approve": "✓ Aprovar e usar esta resposta",
+      "retry": "↻ Tentar novamente (gerar nova resposta)",
+      "retryWithInstructions": "✎ Tentar novamente com instruções personalizadas"
+    },
+    "approvalPrompt": "O que você gostaria de fazer?",
+    "customInstructionsPrompt": "Digite suas instruções personalizadas:"
   },
   "common": {
     "yes": "Sim",

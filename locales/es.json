@@ -7,7 +7,10 @@
       "firstTime": "¿Primera vez? ¡Ejecuta setup para comenzar!",
       "typeMessage": "Escribe tu mensaje o usa /help para comandos"
     },
-    "goodbye": "¡Adiós!"
+    "goodbye": "¡Adiós!",
+    "feedback": {
+      "text": "Contribuciones o reportes de bugs"
+    }
   },
   "cli": {
     "prompt": "> ",
@@ -65,7 +68,15 @@
       "fileComplete": "¡Archivo committed exitosamente!",
       "allComplete": "¡Todos los archivos committed exitosamente!",
       "noChanges": "No hay archivos con cambios para commit.",
-      "summary": "{count} {files} committed"
+      "allFilesIgnored": "Todos los archivos están ignorados. Nada para commit.",
+      "ignoringFiles": "Ignorando {count} archivo(s) que coinciden: {patterns}",
+      "groupingFiles": "Agrupando {count} archivo(s) en {groups} grupo(s): {patterns}",
+      "summary": "{count} {files} committed",
+      "summaryComplete": "{count} commits creados ({files} archivos)",
+      "groupCommits": "{count} commits en grupo ({files} archivos)",
+      "individualCommits": "{count} commits individuales",
+      "failedCommits": "{count} fallaron",
+      "completedIn": "Completado en {time}s"
     },
     "errors": {
       "notARepository": "No es un repositorio git: {path}",
@@ -93,6 +104,7 @@
   "setup": {
     "welcome": "¡Bienvenido a coParrot!",
     "intro": "Vamos a configurarlo. Solo tomará un minuto.",
+    "reconfigureMessage": "Vamos a reconfigurar tu configuración de coParrot. Tu configuración actual será actualizada.",
     "selectLanguage": "Elige tu idioma preferido:",
     "selectProvider": "Selecciona un proveedor de LLM:",
     "providers": {
@@ -210,6 +222,16 @@
       "warning": "⚠"
     },
     "running": "Ejecutando {toolName}..."
+  },
+  "llm": {
+    "approvalTitle": "Mensaje Generado por IA:",
+    "approvalOptions": {
+      "approve": "✓ Aprobar y usar esta respuesta",
+      "retry": "↻ Reintentar (generar nueva respuesta)",
+      "retryWithInstructions": "✎ Reintentar con instrucciones personalizadas"
+    },
+    "approvalPrompt": "¿Qué te gustaría hacer?",
+    "customInstructionsPrompt": "Ingresa tus instrucciones personalizadas:"
   },
   "common": {
     "yes": "Sí",

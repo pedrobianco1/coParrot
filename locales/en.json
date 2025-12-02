@@ -7,7 +7,10 @@
       "firstTime": "First time? Run setup to get started!",
       "typeMessage": "Type a command or 'help' to see available commands"
     },
-    "goodbye": "Goodbye!"
+    "goodbye": "Goodbye!",
+    "feedback": {
+      "text": "Contributions or bug reports"
+    }
   },
   "cli": {
     "prompt": "> ",
@@ -66,7 +69,15 @@
       "fileComplete": "File committed successfully!",
       "allComplete": "All files committed successfully!",
       "noChanges": "No files with changes to commit.",
-      "summary": "Committed {count} {files}"
+      "allFilesIgnored": "All files are ignored. Nothing to commit.",
+      "ignoringFiles": "Ignoring {count} file(s) matching: {patterns}",
+      "groupingFiles": "Grouping {count} file(s) into {groups} group(s): {patterns}",
+      "summary": "Committed {count} {files}",
+      "summaryComplete": "{count} commits created ({files} files)",
+      "groupCommits": "{count} group commits ({files} files)",
+      "individualCommits": "{count} individual commits",
+      "failedCommits": "{count} failed",
+      "completedIn": "Completed in {time}s"
     },
     "errors": {
       "notARepository": "Not a git repository: {path}",
@@ -94,6 +105,7 @@
   "setup": {
     "welcome": "Welcome to coParrot!",
     "intro": "Let's get you set up. This will only take a minute.",
+    "reconfigureMessage": "Let's reconfigure your coParrot settings. Your current settings will be updated.",
     "selectLanguage": "Choose your preferred language:",
     "selectProvider": "Select an LLM provider:",
     "providers": {
@@ -211,6 +223,16 @@
       "warning": "⚠"
     },
     "running": "Running {toolName}..."
+  },
+  "llm": {
+    "approvalTitle": "AI Generated Message:",
+    "approvalOptions": {
+      "approve": "✓ Approve and use this response",
+      "retry": "↻ Retry (generate a new response)",
+      "retryWithInstructions": "✎ Retry with custom instructions"
+    },
+    "approvalPrompt": "What would you like to do?",
+    "customInstructionsPrompt": "Enter your custom instructions:"
   },
   "common": {
     "yes": "Yes",
