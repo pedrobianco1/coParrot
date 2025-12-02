@@ -4,6 +4,7 @@ import { confirm, select, input } from '@inquirer/prompts';
 import StreamingOutput from '../lib/streamer.js';
 import chalk from 'chalk';
 import { buildSystemPrompt } from './prompts.js';
+import i18n from './i18n.js';
 
 
 class LLMOrchestrator {
@@ -56,17 +57,17 @@ class LLMOrchestrator {
 
     // Present options to the user
     const action = await select({
-      message: 'What would you like to do?',
+      message: i18n.t('llm.approvalPrompt'),
       choices: [
-        { name: '✓ Approve and use this response', value: 'approve' },
-        { name: '↻ Retry (generate a new response)', value: 'retry' },
-        { name: '✎ Retry with custom instructions', value: 'retry_with_instructions' }
+        { name: i18n.t('llm.approvalOptions.approve'), value: 'approve' },
+        { name: i18n.t('llm.approvalOptions.retry'), value: 'retry' },
+        { name: i18n.t('llm.approvalOptions.retryWithInstructions'), value: 'retry_with_instructions' }
       ]
     });
 
     if (action === 'retry_with_instructions') {
       const customInstructions = await input({
-        message: 'Enter your custom instructions:'
+        message: i18n.t('llm.customInstructionsPrompt')
       });
       return { action, customInstructions };
     }
@@ -215,7 +216,7 @@ class LLMOrchestrator {
 
     // Display the response with enhanced formatting
     console.log('\n' + separator);
-    console.log(chalk.cyan.bold('  AI Generated Message:'));
+    console.log(chalk.cyan.bold('  ' + i18n.t('llm.approvalTitle')));
     console.log(separator);
     console.log(chalk.white.bold('\n' + response + '\n'));
     console.log(separator + '\n');
