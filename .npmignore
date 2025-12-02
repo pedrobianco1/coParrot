@@ -1,0 +1,29 @@
+# Development files
+.git
+.gitignore
+.DS_Store
+*.log
+npm-debug.log*
+
+# IDE
+.vscode
+.idea
+
+# Test files
+test/
+*.test.js
+*.spec.js
+
+# Documentation (keep README.md)
+docs/
+PLANNING.md
+
+# Assets not needed in package
+*.png
+*.jpg
+*.gif
+src/ascii-text-art*.png
+
+# Config files
+.eslintrc*
+.prettierrc*
