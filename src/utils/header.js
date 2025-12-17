@@ -22,29 +22,6 @@ export function createHeader(text = 'CoParrot', font = 'Standard') {
 }
 
 /**
- * Get a random cool gradient
- * @returns {function} Gradient function
- */
-export function getRandomGradient() {
-  const gradients = [
-    // Ocean (blue to cyan)
-    gradient(['#0A2463', '#3E92CC', '#00F5FF']),
-    // Sunset (orange to pink)
-    gradient(['#FF6B35', '#F7931E', '#FF006E']),
-    // Forest (green to teal)
-    gradient(['#2D6A4F', '#40916C', '#74C69D']),
-    // Purple Dream
-    gradient(['#7209B7', '#B5179E', '#F72585']),
-    // Fire
-    gradient(['#FF0000', '#FF6B00', '#FFD700']),
-    // Rainbow
-    gradient(['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'])
-  ];
-
-  return gradients[Math.floor(Math.random() * gradients.length)];
-}
-
-/**
  * Create an animated gradient header (cycles through colors)
  * @param {string} text - Text to display
  * @param {string} font - Figlet font
